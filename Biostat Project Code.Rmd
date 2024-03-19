@@ -1,0 +1,432 @@
+---
+title: "R_project"
+author: "Varma Pericherla"
+date: "2023-12-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+# Load the haven package
+library(haven)
+
+# Specify the directory path
+directory_path <- "C:/Users/Dr ANANTH VARMA/OneDrive/Desktop/R_Project"
+
+# Specify the file to read
+file_to_read <- "PBCD_E_2007.XPT"
+
+# Create the full file path
+file_path <- file.path(directory_path, file_to_read)
+
+# Read the XPT file and create a dataframe
+PBCD_E_2007 <- read_xpt(file_path)
+
+# Display the dataframe
+cat("Contents of", file_to_read, ":\n")
+print(head(PBCD_E_2007))
+cat("\n")
+```
+
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+
+# Specify the file to read
+file_to_read <- "UHM_E_2007.XPT"
+
+# Create the full file path
+file_path <- file.path(directory_path, file_to_read)
+
+# Read the XPT file and create a dataframe
+UHM_E_2007 <- read_xpt(file_path)
+
+# Display the dataframe
+cat("Contents of", file_to_read, ":\n")
+print(head(UHM_E_2007))
+cat("\n")
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+
+
+```{r pressure, echo=FALSE}
+
+# Specify the file to read
+file_to_read <- "PBCD_J_2018.XPT"
+
+# Create the full file path
+file_path <- file.path(directory_path, file_to_read)
+
+# Read the XPT file and create a dataframe
+PBCD_J_2018 <- read_xpt(file_path)
+
+# Display the dataframe
+cat("Contents of", file_to_read, ":\n")
+print(head(PBCD_J_2018))
+cat("\n")
+```
+
+
+
+
+```{r pressure, echo=FALSE}
+
+# Specify the file to read
+file_to_read <- "UM_J_2018.XPT"
+
+# Create the full file path
+file_path <- file.path(directory_path, file_to_read)
+
+# Read the XPT file and create a dataframe
+UM_J_2018 <- read_xpt(file_path)
+
+# Display the dataframe
+cat("Contents of", file_to_read, ":\n")
+print(head(UM_J_2018))
+cat("\n")
+```
+
+
+
+```{r pressure, echo=FALSE}
+# Install the dplyr package
+install.packages("dplyr")
+
+# Load the dplyr package
+
+summary(PBCD_J_2018)
+```
+
+
+
+
+
+
+
+
+```{r pressure, echo=FALSE}
+# Descriptive Statistics
+print("Dataset UHM_E_2007")
+
+summary(UHM_E_2007)
+
+print("Dataset PBCD_E_2007")
+summary(PBCD_E_2007)
+
+print("Dataset PBCD_J_2018")
+summary(PBCD_J_2018)
+
+print("Dataset UM_J_2018")
+summary(UM_J_2018)
+```
+
+
+
+
+```{r pressure, echo=FALSE}
+# Comparative Analysis
+# Example for Cadmium in blood samples
+t_test_cadmium <- t.test(PBCD_E_2007$LBXBCD, PBCD_J_2018$LBXBCD)
+```
+
+
+```{r pressure, echo=FALSE}
+t_test_cadmium
+
+
+```
+
+```{r pressure, echo=FALSE}
+# Load necessary library
+library(haven)
+
+data_blood_2007 <- PBCD_E_2007
+data_urine_2007 <-UHM_E_2007
+data_blood_2018 <- PBCD_J_2018
+data_urine_2018 <- UM_J_2018
+
+
+```
+
+
+```{r pressure, echo=FALSE}
+# Replace with actual column names if different
+blood_cols <- c("SEQN", "LBXBCD", "LBXBPB", "LBXTHG")
+urine_cols <- c("SEQN", "URXUCD", "URXUPB")
+
+blood_2007 <- data_blood_2007[blood_cols]
+urine_2007 <- data_urine_2007[urine_cols]
+blood_2018 <- data_blood_2018[blood_cols]
+urine_2018 <- data_urine_2018[urine_cols]
+
+
+
+```
+
+```{r pressure, echo=FALSE}
+# Comparative Analysis for each metal
+# Cadmium in blood and urine
+t_test_cadmium_blood <- t.test(blood_2007$LBXBCD, blood_2018$LBXBCD)
+t_test_cadmium_urine <- t.test(urine_2007$URXUCD, urine_2018$URXUCD)
+
+# Lead in blood and urine
+t_test_lead_blood <- t.test(blood_2007$LBXBPB, blood_2018$LBXBPB)
+t_test_lead_urine <- t.test(urine_2007$URXUPB, urine_2018$URXUPB)
+
+
+# Mercury in blood
+t_test_mercury_blood <- t.test(blood_2007$LBXTHG, blood_2018$LBXTHG)
+
+# Printing the results
+print("Cadmium in Blood:")
+print(t_test_cadmium_blood)
+print("Cadmium in Urine:")
+print(t_test_cadmium_urine)
+
+print("Lead in Blood:")
+print(t_test_lead_blood)
+print("Lead in Urine:")
+print(t_test_lead_urine)
+
+
+print("Mercury in Blood:")
+print(t_test_mercury_blood)
+
+```
+# Blood Cadmium Levels in 2007 and 2018
+ggplot() +
+  geom_boxplot(data = blood_2007, aes(x = "2007", y = LBXBCD), fill = "blue") +
+  geom_boxplot(data = blood_2018, aes(x = "2018", y = LBXBCD), fill = "red") +
+  labs(title = "Blood Cadmium Levels in 2007 vs 2018", x = "Year", y = "Cadmium Levels (ug/L)"
+  
+  
+  
+  
+```{r pressure, echo=FALSE}
+library(ggplot2)
+
+# Load necessary library
+ggplot() +
+  geom_boxplot(data = blood_2007, aes(x = "2007", y = LBXBCD), fill = "blue") +
+  geom_boxplot(data = blood_2018, aes(x = "2018", y = LBXBCD), fill = "red") +
+  labs(title = "Blood Cadmium Levels in 2007 vs 2018", x = "Year", y = "Cadmium Levels (ug/L)")
+
+
+```
+
+
+```{r pressure, echo=FALSE}
+library(ggplot2)
+
+# Blood Cadmium Levels in 2007 and 2018
+ggplot() +
+  geom_boxplot(data = blood_2007, aes(x = "2007", y = LBXBCD), fill = "blue") +
+  geom_boxplot(data = blood_2018, aes(x = "2018", y = LBXBCD), fill = "red") +
+  labs(title = "Blood Cadmium Levels in 2007 vs 2018", x = "Year", y = "Cadmium Levels (ug/L)")
+
+# Blood Lead Levels in 2007 and 2018
+ggplot() +
+  geom_boxplot(data = blood_2007, aes(x = "2007", y = LBXBPB), fill = "blue") +
+  geom_boxplot(data = blood_2018, aes(x = "2018", y = LBXBPB), fill = "red") +
+  labs(title = "Blood Lead Levels in 2007 vs 2018", x = "Year", y = "Lead Levels (ug/dL)")
+
+
+
+# Blood Mercury Levels in 2007 and 2018
+ggplot() +
+  geom_boxplot(data = blood_2007, aes(x = "2007", y = LBXTHG), fill = "blue") +
+  geom_boxplot(data = blood_2018, aes(x = "2018", y = LBXTHG), fill = "red") +
+  labs(title = "Blood Mercury Levels in 2007 vs 2018", x = "Year", y = "Mercury Levels (ug/L)")
+
+# Urine Cadmium Levels in 2007 and 2018
+ggplot() +
+  geom_boxplot(data = urine_2007, aes(x = "2007", y = URXUCD), fill = "blue") +
+  geom_boxplot(data = urine_2018, aes(x = "2018", y = URXUCD), fill = "red") +
+  labs(title = "Urine Cadmium Levels in 2007 vs 2018", x = "Year", y = "Cadmium Levels (ug/L)")
+
+```
+
+
+
+
+```{r pressure, echo=FALSE}
+ggplot() +
+  geom_boxplot(data = urine_2007, aes(x = "2007", y = URXUPB), fill = "blue") +
+  geom_boxplot(data = urine_2018, aes(x = "2018", y = URXUPB), fill = "red") +
+  labs(title = "Urine Lead Levels in 2007 vs 2018", x = "Year", y = "lead Levels (ug/L)")
+
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+# Load necessary library
+library(haven)
+
+data_blood_2007 <- PBCD_E_2007
+data_urine_2007 <-UHM_E_2007
+data_blood_2018 <- PBCD_J_2018
+data_urine_2018 <- UM_J_2018
+
+
+```
+
+
+```{r pressure, echo=FALSE}
+
+data_blood_2007$year <- 2007
+data_urine_2007$year <- 2007
+data_blood_2018$year <- 2018
+data_urine_2018$year<-2018
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+head(data_blood_2007)
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+ ggplot(data_blood_2007, aes(x = LBXBCD)) +
+  geom_histogram(binwidth = 0.05, fill = "blue", alpha = 0.7) +
+  labs(title = "Histogram of Cadmium Levels in Blood for 2007", x = "Cadmium Levels", y = "Frequency")
+
+
+```
+
+```
+
+
+```{r pressure, echo=FALSE}
+ # Cadmium in Blood - 2007
+ggplot(data_blood_2007, aes(x = LBXBCD)) +
+  geom_histogram(binwidth = 0.05, fill = "blue", alpha = 0.7) +
+  labs(title = "Cadmium Levels in Blood - 2007", x = "Cadmium Levels", y = "Frequency")
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+ggplot(data_blood_2007, aes(x = LBXBPB)) +
+  geom_histogram(binwidth = 0.1, fill = "green", alpha = 0.7) +
+  labs(title = "Lead Levels in Blood - 2007", x = "Lead Levels", y = "Frequency")
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+# Mercury in Blood - 2007
+ggplot(data_blood_2007, aes(x = LBXTHG)) +
+  geom_histogram(binwidth = 0.1, fill = "purple", alpha = 0.7) +
+  labs(title = "Mercury Levels in Blood - 2007", x = "Mercury Levels", y = "Frequency")
+
+```
+
+
+```{r pressure, echo=FALSE}
+
+ggplot(data_urine_2007, aes(x = URXUCD)) +
+  geom_histogram(binwidth = 0.05, fill = "blue", alpha = 0.7) +
+  labs(title = "Cadmium Levels in Urine - 2007", x = "Cadmium Levels", y = "Frequency")
+
+```
+
+
+```{r pressure, echo=FALSE}
+# Lead in Urine - 2018
+ggplot(data_urine_2018, aes(x = URXUPB)) +
+  geom_histogram(binwidth = 0.1, fill = "orange", alpha = 0.7) +
+  labs(title = "Lead Levels in Urine - 2018", x = "Lead Levels", y = "Frequency")
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+# Lead in Urine - 2018
+ggplot(data_blood_2018, aes(x = LBXBCD)) +
+  geom_histogram(binwidth = 0.05, fill = "red", alpha = 0.7) +
+  labs(title = "Cadmium Levels in Blood - 2018", x = "Cadmium Levels", y = "Frequency")
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+# Lead in Blood - 2018
+ggplot(data_blood_2018, aes(x = LBXBPB)) +
+  geom_histogram(binwidth = 0.1, fill = "orange", alpha = 0.7) +
+  labs(title = "Lead Levels in Blood - 2018", x = "Lead Levels", y = "Frequency")
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+# Mercury in Blood - 2018
+ggplot(data_blood_2018, aes(x = LBXTHG)) +
+  geom_histogram(binwidth = 0.1, fill = "pink", alpha = 0.7) +
+  labs(title = "Mercury Levels in Blood - 2018", x = "Mercury Levels", y = "Frequency")
+
+```
+
+
+```{r pressure, echo=FALSE}
+# Cadmium in Urine - 2018
+ggplot(data_urine_2007, aes(x = URXUCD)) +
+  geom_histogram(binwidth = 0.05, fill = "red", alpha = 0.7) +
+  labs(title = "Cadmium Levels in Urine - 2007", x = "Cadmium Levels", y = "Frequency")
+
+```
+
+
+```{r pressure, echo=FALSE}
+
+ggplot(data_urine_2007, aes(x = URXUPB)) +
+  geom_histogram(binwidth = 0.1, fill = "orange", alpha = 0.7) +
+  labs(title = "Lead Levels in Urine - 2007", x = "Lead Levels", y = "Frequency")
+
+```
+
+
+```{r pressure, echo=FALSE}
+
+column_names <- colnames(data_urine_2018)
+print(column_names)
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+# Mercury in Urine - 2018
+ggplot(data_urine_2007, aes(x = LBXTHG)) + 
+  geom_histogram(binwidth = 0.05, fill = "blue", alpha = 0.7) +
+  labs(title = "Mercury Levels in Urine - 2007", x = "Mercury Levels", y = "Frequency")
+
+
+```
